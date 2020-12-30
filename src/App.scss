@@ -1,3 +1,9 @@
 @import "./sass/variables.scss";
 @import "./sass/resets.scss";
 @import "./sass/utilities.scss";
+
+.app {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
