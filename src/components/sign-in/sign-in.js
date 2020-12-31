@@ -1,0 +1,105 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+import "./sign-in.scss";
+
+import { checkEmpty, validateEmail } from "../../utils/utils.forms";
+
+import Title from "../title/title";
+import InputField from "../input-field/input-field";
+import Button from "../button/button";
+
+class SignIn extends React.Component {
+	constructor() {
+		super();
+
+		this.state = {
+			email: "",
+			emailError: "",
+			password: "",
+			passwordError: "",
+			fieldNames: ["username", "email", "password", "repeatedPassword"],
+		};
+	}
+
+	handleInputChange = (event) => {
+		this.setState({ [event.target.name]: event.target.value });
+	};
+
+	handleFormSubmit = (event) => {
+		event.preventDefault();
+
+		const emptyFieldNames = checkEmpty([
+			{ value: this.state.email, fieldName: "email" },
+			{ value: this.state.password, fieldName: "password" },
+		]);
+
+		// const nonEmptyFieldNames = this.state.fieldNames.filter((fieldName) => {
+		// 	return emptyFieldNames.indexOf(fieldName) === -1;
+		// });
+
+		if (emptyFieldNames.length > 0) {
+			emptyFieldNames.forEach((emptyFieldName) => {
+				this.setFieldError(
+					emptyFieldName,
+					"this field cannot be empty"
+				);
+			});
+			//this.clearFieldError(nonEmptyFieldNames);
+			return;
+		}
+
+		const validEmail = validateEmail(this.state.email);
+
+		if (!validEmail) {
+			this.setFieldError("email", "this email is not valid");
+			return;
+		}
+
+		//this.clearFieldError("email");
+
+		this.clearFieldError(["email", "password"]);
+	};
+
+	setFieldError = (fieldName, errorMessage) => {
+		this.setState({ [`${fieldName}Error`]: errorMessage });
+	};
+
+	clearFieldError = (fieldNames) => {
+		fieldNames.forEach((fieldName) => {
+			this.setState({ [`${fieldName}Error`]: "" });
+		});
+	};
+
+	render() {
+		return (
+			<div className="sign-in form-container">
+				<Title>Sign in to react chat</Title>
+				<Title smaller>
+					Do not have an account? <Link to="/signup">sign up</Link>
+				</Title>
+				<form className="sign-in-form" onSubmit={this.handleFormSubmit}>
+					<InputField
+						type="text"
+						label="email"
+						name="email"
+						value={this.state.email}
+						error={this.state.emailError}
+						handleInputChange={this.handleInputChange}
+					/>
+					<InputField
+						type="password"
+						label="password"
+						name="password"
+						value={this.state.password}
+						error={this.state.passwordError}
+						handleInputChange={this.handleInputChange}
+					/>
+					<Button type="submit">sign in</Button>
+				</form>
+			</div>
+		);
+	}
+}
+
+export default SignIn;

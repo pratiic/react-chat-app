@@ -1,10 +1,10 @@
 @import "../../sass/variables.scss";
 
 .message-field {
-	position: absolute;
-	bottom: 2rem;
-	left: 1.5rem;
-	right: 1.5rem;
+	// position: absolute;
+	// bottom: 2rem;
+	// left: 1.5rem;
+	// right: 1.5rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -27,12 +27,43 @@
 		color: lightgrey;
 	}
 
+	.icons {
+		margin-left: 1.75rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		& > :not(:first-child) {
+			margin-left: 1.75rem;
+		}
+
+		button {
+			outline: none;
+			border: none;
+			background-color: transparent;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
 	.icon {
 		cursor: pointer;
-		margin-left: 1.75rem;
 
 		path {
 			fill: lightgrey;
+		}
+
+		&:hover {
+			path {
+				fill: $color-blue;
+			}
+		}
+
+		&:active {
+			path {
+				fill: lightgrey;
+			}
 		}
 	}
 }

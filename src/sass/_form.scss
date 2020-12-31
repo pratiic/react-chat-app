@@ -1,0 +1,24 @@
+.form-container {
+	padding-top: 2rem;
+
+	a {
+		color: $color-blue;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&:active {
+			color: lightgrey;
+		}
+	}
+}
+
+.sign-in-form,
+.sign-up-form {
+	color: lightgrey;
+	width: 35rem;
+	margin: auto;
+	font-size: 1.55rem;
+	margin-top: 3rem;
+}

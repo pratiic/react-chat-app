@@ -1,0 +1,23 @@
+@import "../../sass/variables";
+
+.generic-button {
+	background-color: transparent;
+	outline: none;
+	border: 2px solid $color-blue;
+	font-size: inherit;
+	font-family: inherit;
+	color: lightgrey;
+	padding: 0.3rem 1.75rem;
+	border-radius: 5px;
+	text-transform: capitalize;
+	cursor: pointer;
+
+	&:hover {
+		background-color: $color-blue;
+		color: white;
+	}
+
+	&:active {
+		background-color: darken($color-blue, 5%);
+	}
+}

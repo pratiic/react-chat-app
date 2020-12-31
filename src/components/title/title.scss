@@ -1,0 +1,9 @@
+p {
+	color: lightgrey;
+	font-size: 3rem;
+	text-align: center;
+
+	&.smaller {
+		font-size: 1.7rem;
+	}
+}
