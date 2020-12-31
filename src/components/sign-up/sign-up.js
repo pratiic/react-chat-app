@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import { checkEmpty, validateEmail, checkMatch } from "../../utils/utils.forms";
 
+import { auth } from "../../firebase/firebase.utils";
+
 import Title from "../title/title";
 import InputField from "../input-field/input-field";
 import Button from "../button/button";
@@ -22,7 +24,17 @@ class SignUp extends React.Component {
 			repeatedPasswordError: "",
 			fieldNames: ["username", "email", "password", "repeatedPassword"],
 		};
+
+		this.inputRef = React.createRef();
 	}
+
+	componentDidMount() {
+		this.focusFirstInput();
+	}
+
+	focusFirstInput = () => {
+		this.inputRef.current.focus();
+	};
 
 	handleInputChange = (event) => {
 		this.setState({ [event.target.name]: event.target.value });
@@ -85,6 +97,21 @@ class SignUp extends React.Component {
 			"password",
 			"repeatedPassword",
 		]);
+
+		this.signUpWithEmailAndPassword();
+	};
+
+	signUpWithEmailAndPassword = async () => {
+		try {
+			await auth.createUserWithEmailAndPassword(
+				this.state.email,
+				this.state.password
+			);
+		} catch (error) {
+			if (error.code === "auth/email-already-in-use") {
+				this.setFieldError("email", "this email already exists");
+			}
+		}
 	};
 
 	setFieldError = (fieldName, errorMessage) => {
@@ -111,6 +138,7 @@ class SignUp extends React.Component {
 						name="username"
 						value={this.state.username}
 						error={this.state.usernameError}
+						reference={this.inputRef}
 						handleInputChange={this.handleInputChange}
 					/>
 					<InputField

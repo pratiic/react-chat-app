@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 
 import "./sign-in.scss";
 
+import { signInWithGoogle, auth } from "../../firebase/firebase.utils";
 import { checkEmpty, validateEmail } from "../../utils/utils.forms";
+
+import { ReactComponent as GoogleIcon } from "../../assets/icons/google.svg";
 
 import Title from "../title/title";
 import InputField from "../input-field/input-field";
@@ -20,7 +23,17 @@ class SignIn extends React.Component {
 			passwordError: "",
 			fieldNames: ["username", "email", "password", "repeatedPassword"],
 		};
+
+		this.inputRef = React.createRef();
 	}
+
+	componentDidMount() {
+		this.focusFirstInput();
+	}
+
+	focusFirstInput = () => {
+		this.inputRef.current.focus();
+	};
 
 	handleInputChange = (event) => {
 		this.setState({ [event.target.name]: event.target.value });
@@ -59,6 +72,27 @@ class SignIn extends React.Component {
 		//this.clearFieldError("email");
 
 		this.clearFieldError(["email", "password"]);
+
+		this.signInWithEmailAndPassword();
+	};
+
+	signInWithEmailAndPassword = async () => {
+		try {
+			await auth.signInWithEmailAndPassword(
+				this.state.email,
+				this.state.password
+			);
+		} catch (error) {
+			if (error.code === "auth/wrong-password") {
+				this.setFieldError("password", "this is an invalid password");
+			}
+			if (error.code === "auth/user-not-found") {
+				this.setFieldError(
+					"email",
+					"this email is not associated with any user"
+				);
+			}
+		}
 	};
 
 	setFieldError = (fieldName, errorMessage) => {
@@ -69,6 +103,10 @@ class SignIn extends React.Component {
 		fieldNames.forEach((fieldName) => {
 			this.setState({ [`${fieldName}Error`]: "" });
 		});
+	};
+
+	buttonClickHandler = () => {
+		signInWithGoogle();
 	};
 
 	render() {
@@ -85,6 +123,7 @@ class SignIn extends React.Component {
 						name="email"
 						value={this.state.email}
 						error={this.state.emailError}
+						reference={this.inputRef}
 						handleInputChange={this.handleInputChange}
 					/>
 					<InputField
@@ -95,7 +134,16 @@ class SignIn extends React.Component {
 						error={this.state.passwordError}
 						handleInputChange={this.handleInputChange}
 					/>
-					<Button type="submit">sign in</Button>
+					<div className="buttons">
+						<Button type="submit">sign in</Button>
+						<Button
+							google
+							buttonClickHandler={this.buttonClickHandler}
+						>
+							<GoogleIcon className="icon" />
+							sign in with google
+						</Button>
+					</div>
 				</form>
 			</div>
 		);

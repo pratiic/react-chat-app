@@ -1,30 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 import "./App.scss";
+
+import { setCurrentUser } from "./redux/current-user/current-user.actions";
+
+import { auth } from "./firebase/firebase.utils";
 
 import Header from "./components/header/header";
 import Chat from "./components/chat/chat";
 import SignIn from "./components/sign-in/sign-in";
 import SignUp from "./components/sign-up/sign-up";
 
-const App = () => {
+const App = ({ currentUser, setCurrentUser }) => {
+	useEffect(() => {
+		auth.signOut();
+
+		const unSubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
+			setCurrentUser(user);
+		});
+
+		return () => {
+			unSubscribeFromAuth();
+		};
+		//eslint-disable-next-line
+	}, []);
+
 	return (
 		<div className="app">
-			<Header />
 			<BrowserRouter>
+				<Header />
 				<Switch>
 					<Route path="/" exact>
 						<Redirect to="/signin"></Redirect>
 					</Route>
 					<Route path="/signin">
-						<SignIn />
+						{currentUser ? <Redirect to="/chat" /> : <SignIn />}
 					</Route>
 					<Route path="/signup">
-						<SignUp />
+						{currentUser ? <Redirect to="/chat" /> : <SignUp />}
 					</Route>
 					<Route path="/chat">
-						<Chat />
+						{currentUser ? <Chat /> : <Redirect to="/signin" />}
 					</Route>
 				</Switch>
 			</BrowserRouter>
@@ -32,4 +50,18 @@ const App = () => {
 	);
 };
 
-export default React.memo(App);
+const mapStateToProps = (state) => {
+	return {
+		currentUser: state.currentUser.currentUser,
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setCurrentUser: (currentUser) => {
+			dispatch(setCurrentUser(currentUser));
+		},
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(App));

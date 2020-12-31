@@ -3,7 +3,7 @@
 .generic-button {
 	background-color: transparent;
 	outline: none;
-	border: 2px solid $color-blue;
+	border: 1px solid $color-blue;
 	font-size: inherit;
 	font-family: inherit;
 	color: lightgrey;
@@ -11,6 +11,19 @@
 	border-radius: 5px;
 	text-transform: capitalize;
 	cursor: pointer;
+
+	&.google {
+		border: 1px solid $color-red;
+
+		&:hover {
+			background-color: $color-red;
+			color: white;
+		}
+
+		&:active {
+			background-color: darken($color-red, 5%);
+		}
+	}
 
 	&:hover {
 		background-color: $color-blue;

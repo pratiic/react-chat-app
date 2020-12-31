@@ -2,7 +2,15 @@ import React from "react";
 
 import "./input-field.scss";
 
-const InputField = ({ type, label, value, name, error, handleInputChange }) => {
+const InputField = ({
+	type,
+	label,
+	value,
+	name,
+	error,
+	reference,
+	handleInputChange,
+}) => {
 	const inputClassName = error ? "error" : null;
 
 	return (
@@ -13,6 +21,7 @@ const InputField = ({ type, label, value, name, error, handleInputChange }) => {
 				type={type}
 				value={value}
 				name={name}
+				ref={reference}
 				onChange={handleInputChange}
 			/>
 			{error ? <p>{error}</p> : null}
