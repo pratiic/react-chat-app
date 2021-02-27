@@ -12,7 +12,7 @@
 	text-transform: capitalize;
 	cursor: pointer;
 
-	&.google {
+	&.secondary {
 		border: 1px solid $color-red;
 
 		&:hover {
@@ -23,6 +23,11 @@
 		&:active {
 			background-color: darken($color-red, 5%);
 		}
+	}
+
+	&.small {
+		font-size: 1.45rem;
+		padding: 0.3rem 1.5rem;
 	}
 
 	&:hover {

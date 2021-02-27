@@ -137,7 +137,7 @@ class SignIn extends React.Component {
 					<div className="buttons">
 						<Button type="submit">sign in</Button>
 						<Button
-							google
+							secondary
 							buttonClickHandler={this.buttonClickHandler}
 						>
 							<GoogleIcon className="icon" />

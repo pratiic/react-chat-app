@@ -9,14 +9,12 @@ import { setCurrentUser } from "./redux/current-user/current-user.actions";
 import { auth } from "./firebase/firebase.utils";
 
 import Header from "./components/header/header";
-import Chat from "./components/chat/chat";
 import SignIn from "./components/sign-in/sign-in";
 import SignUp from "./components/sign-up/sign-up";
+import Main from "./components/main/main";
 
 const App = ({ currentUser, setCurrentUser }) => {
 	useEffect(() => {
-		auth.signOut();
-
 		const unSubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
 			setCurrentUser(user);
 		});
@@ -33,7 +31,7 @@ const App = ({ currentUser, setCurrentUser }) => {
 				<Header />
 				<Switch>
 					<Route path="/" exact>
-						<Redirect to="/signin"></Redirect>
+						<Redirect to="/chat"></Redirect>
 					</Route>
 					<Route path="/signin">
 						{currentUser ? <Redirect to="/chat" /> : <SignIn />}
@@ -42,7 +40,7 @@ const App = ({ currentUser, setCurrentUser }) => {
 						{currentUser ? <Redirect to="/chat" /> : <SignUp />}
 					</Route>
 					<Route path="/chat">
-						{currentUser ? <Chat /> : <Redirect to="/signin" />}
+						{currentUser ? <Main /> : <Redirect to="/signin" />}
 					</Route>
 				</Switch>
 			</BrowserRouter>

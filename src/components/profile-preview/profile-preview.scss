@@ -4,6 +4,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-right: 2.5rem;
 
 	.profile-picture {
 		display: block;
@@ -12,7 +13,7 @@
 		border-radius: 50%;
 		font-size: 2.2rem;
 		color: lightgrey;
-		background-color: $color-grey-dark;
+		//background-color: $color-grey-dark;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -23,5 +24,14 @@
 
 	.username {
 		font-size: 1.7rem;
+	}
+
+	.icon {
+		path {
+			fill: lightgrey;
+		}
+
+		margin-left: 1.5rem;
+		cursor: pointer;
 	}
 }

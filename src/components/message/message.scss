@@ -1,0 +1,17 @@
+@import "../../sass/variables";
+
+.message {
+	background-color: $color-grey-light;
+	font-size: 1.55rem;
+	color: white;
+	padding: 0.5rem 0.7rem;
+	border-radius: 5px;
+	width: fit-content;
+	max-width: 85%;
+	margin-bottom: 0.7rem;
+
+	&.self {
+		background-color: $color-blue;
+		margin-left: auto;
+	}
+}

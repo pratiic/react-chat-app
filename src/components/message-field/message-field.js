@@ -5,7 +5,7 @@ import "./message-field.scss";
 import { ReactComponent as SendIcon } from "../../assets/icons/send.svg";
 import { ReactComponent as ClearIcon } from "../../assets/icons/close.svg";
 
-const MessageField = () => {
+const MessageField = ({ addMessage }) => {
 	const [message, setMessage] = useState("");
 
 	const inputRef = useRef(null);
@@ -21,6 +21,8 @@ const MessageField = () => {
 
 	const handleFormSubmit = (event) => {
 		event.preventDefault();
+		addMessage(message);
+		setMessage("");
 	};
 
 	return (
@@ -34,14 +36,14 @@ const MessageField = () => {
 				onChange={handleInputChange}
 			/>
 			<div className="icons">
+				<button className="send-button" type="submit">
+					<SendIcon className="icon" />
+				</button>
 				<button
 					className="clear-button"
 					onClick={handleClearButtonClick}
 				>
 					<ClearIcon className="icon" />
-				</button>
-				<button className="send-button" type="submit">
-					<SendIcon className="icon" />
 				</button>
 			</div>
 		</form>
