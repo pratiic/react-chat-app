@@ -23,4 +23,27 @@ export const signInWithGoogle = () => {
 	firebase.auth().signInWithPopup(provider);
 };
 
-export const createUserDocument = (user) => {};
+export const createUserDocument = async (user) => {
+	const newUser = {
+		username: user.displayName || user.email,
+		email: user.email,
+		photoURL: user.photoURL,
+		userId: user.uid,
+	};
+
+	await firestore.collection("users").doc(user.uid).set(newUser);
+};
+
+export const createMessageDocument = async (message, currentUser) => {
+	const newMessage = {
+		text: message,
+		createdBy: currentUser.uid,
+		createdAt: new Date().getTime(),
+		mid: `${message}${currentUser.uid}${new Date().getTime()}`,
+	};
+
+	await firestore
+		.collection("messages")
+		.doc(`${currentUser.uid}${new Date().getTime()}`)
+		.set(newMessage);
+};

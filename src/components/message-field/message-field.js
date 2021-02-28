@@ -1,11 +1,14 @@
 import React, { useState, useRef } from "react";
+import { connect } from "react-redux";
 
 import "./message-field.scss";
+
+import { createMessageDocument } from "../../firebase/firebase.utils";
 
 import { ReactComponent as SendIcon } from "../../assets/icons/send.svg";
 import { ReactComponent as ClearIcon } from "../../assets/icons/close.svg";
 
-const MessageField = ({ addMessage }) => {
+const MessageField = ({ currentUser }) => {
 	const [message, setMessage] = useState("");
 
 	const inputRef = useRef(null);
@@ -21,7 +24,9 @@ const MessageField = ({ addMessage }) => {
 
 	const handleFormSubmit = (event) => {
 		event.preventDefault();
-		addMessage(message);
+		if (message.length > 0) {
+			createMessageDocument(message, currentUser);
+		}
 		setMessage("");
 	};
 
@@ -39,15 +44,16 @@ const MessageField = ({ addMessage }) => {
 				<button className="send-button" type="submit">
 					<SendIcon className="icon" />
 				</button>
-				<button
-					className="clear-button"
-					onClick={handleClearButtonClick}
-				>
-					<ClearIcon className="icon" />
-				</button>
+				<ClearIcon className="icon" onClick={handleClearButtonClick} />
 			</div>
 		</form>
 	);
 };
 
-export default MessageField;
+const mapStateToProps = (state) => {
+	return {
+		currentUser: state.currentUser.currentUser,
+	};
+};
+
+export default connect(mapStateToProps)(MessageField);

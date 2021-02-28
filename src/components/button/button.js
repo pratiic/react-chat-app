@@ -8,7 +8,6 @@ const Button = ({ children, type, secondary, size, buttonClickHandler }) => {
 		if (secondary) {
 			className += ` secondary`;
 		}
-		console.log(className);
 
 		return (className += ` ${size}`);
 	};

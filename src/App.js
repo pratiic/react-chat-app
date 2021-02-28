@@ -6,7 +6,7 @@ import "./App.scss";
 
 import { setCurrentUser } from "./redux/current-user/current-user.actions";
 
-import { auth } from "./firebase/firebase.utils";
+import { auth, firestore, createUserDocument } from "./firebase/firebase.utils";
 
 import Header from "./components/header/header";
 import SignIn from "./components/sign-in/sign-in";
@@ -17,6 +17,16 @@ const App = ({ currentUser, setCurrentUser }) => {
 	useEffect(() => {
 		const unSubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
 			setCurrentUser(user);
+
+			if (user) {
+				const userDocument = await firestore
+					.collection("users")
+					.doc(user.uid)
+					.get();
+				if (!userDocument.exists) {
+					createUserDocument(user);
+				}
+			}
 		});
 
 		return () => {
