@@ -2,21 +2,20 @@
 
 .chat {
 	position: relative;
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-rows: 1fr auto;
 	box-sizing: border-box;
 	background-color: $color-grey-dark;
 	padding: 1.5rem 0.75rem;
 	font-weight: 300;
 	border-left: 1px solid black;
 	border-right: 1px solid black;
-	max-height: 92vh;
 
 	&-main {
-		flex: auto 1 1;
 		margin-bottom: 1rem;
 		overflow-y: scroll;
 		overflow-x: hidden;
+		max-height: auto;
 		&::-webkit-scrollbar {
 			width: 1px;
 		}

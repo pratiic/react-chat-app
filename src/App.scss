@@ -4,7 +4,7 @@
 @import "./sass/form.scss";
 
 .app {
-	display: flex;
-	flex-direction: column;
 	height: 100vh;
+	display: grid;
+	grid-template-rows: $header-height $main-height;
 }

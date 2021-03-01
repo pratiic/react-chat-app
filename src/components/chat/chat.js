@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, usePrevious } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 
 import "./chat.scss";
@@ -12,6 +12,8 @@ const Chat = ({ currentUser }) => {
 	const [messages, setMessages] = useState([]);
 	const [totalFetchedMessages, setTotalFetchedMessages] = useState(0);
 	const [fetching, setFetching] = useState(false);
+	const [top, setTop] = useState(0);
+	const [totalMessages, setTotalMessages] = useState(0);
 
 	const scrollDivBottom = useRef(null);
 	const scrollDivTop = useRef(null);
@@ -23,7 +25,10 @@ const Chat = ({ currentUser }) => {
 	}, []);
 
 	useEffect(() => {
-		scrollDivBottom.current.scrollIntoView();
+		if (top <= 0) {
+			scrollDivBottom.current.scrollIntoView();
+		}
+		//eslint-disable-next-line
 	}, [messages]);
 
 	// useEffect(() => {
@@ -35,6 +40,8 @@ const Chat = ({ currentUser }) => {
 		firestore.collection("messages").onSnapshot(async (snapshot) => {
 			setFetching(true);
 			const messagesRef = firestore.collection("messages");
+			const messagesRefData = await messagesRef.get();
+			setTotalMessages(messagesRefData.docs.length);
 			const someKindOfThing = await messagesRef
 				.orderBy("createdAt", "desc")
 				.limit(fetchNumber)
@@ -42,6 +49,7 @@ const Chat = ({ currentUser }) => {
 			const messagesFromFirestore = someKindOfThing.docs;
 			setMessages(messagesFromFirestore);
 			setFetching(false);
+			setTop(0);
 		});
 	};
 
@@ -74,16 +82,21 @@ const Chat = ({ currentUser }) => {
 	const handleLoadMoreClick = () => {
 		fetchMessages(totalFetchedMessages + 25);
 		setTotalFetchedMessages(totalFetchedMessages + 25);
+		setTop(top + 1);
+	};
+
+	const renderLoadMoreButton = () => {
+		return messages.length >= 25 && messages.length < totalMessages ? (
+			<p className="load-more" onClick={handleLoadMoreClick}>
+				{fetching ? "loading..." : "load more..."}
+			</p>
+		) : null;
 	};
 
 	return (
 		<div className="chat">
 			<div className="chat-main">
-				{messages.length === 25 ? (
-					<p className="load-more" onClick={handleLoadMoreClick}>
-						{fetching ? "loading..." : "load more..."}
-					</p>
-				) : null}
+				{renderLoadMoreButton()}
 				<div className="scroll" ref={scrollDivTop}></div>
 				{renderMessages()}
 				<div className="scroll" ref={scrollDivBottom}></div>

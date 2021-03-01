@@ -1,8 +1,8 @@
 @import "../../sass/variables.scss";
 
 .header {
-	height: 5rem;
 	background-color: $color-grey-light;
+	padding: 0.8rem 0;
 
 	.wrapper {
 		display: flex;
