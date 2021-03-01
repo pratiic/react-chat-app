@@ -40,7 +40,7 @@ const Message = ({ text, self, currentUser, senderId }) => {
 			<ProfilePicture
 				userLetter={getProfileLetter(sentBy)}
 				profilePicture={getProfilePicture(sentBy)}
-				small
+				size="small"
 			/>
 			<div className="message">{text}</div>
 		</div>

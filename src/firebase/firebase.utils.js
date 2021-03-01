@@ -29,6 +29,7 @@ export const createUserDocument = async (user) => {
 		email: user.email,
 		photoURL: user.photoURL,
 		userId: user.uid,
+		contacts: [],
 	};
 
 	await firestore.collection("users").doc(user.uid).set(newUser);
@@ -37,7 +38,7 @@ export const createUserDocument = async (user) => {
 export const createMessageDocument = async (message, currentUser) => {
 	const newMessage = {
 		text: message,
-		createdBy: currentUser.uid,
+		createdBy: currentUser.userId,
 		createdAt: new Date().getTime(),
 		mid: `${message}${currentUser.uid}${new Date().getTime()}`,
 	};

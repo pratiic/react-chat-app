@@ -16,9 +16,14 @@ import Main from "./components/main/main";
 const App = ({ currentUser, setCurrentUser }) => {
 	useEffect(() => {
 		const unSubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
-			setCurrentUser(user);
-
 			if (user) {
+				setCurrentUser({
+					username: user.displayName || user.email,
+					email: user.email,
+					photoURL: user.photoURL,
+					userId: user.uid,
+				});
+
 				const userDocument = await firestore
 					.collection("users")
 					.doc(user.uid)
@@ -26,6 +31,8 @@ const App = ({ currentUser, setCurrentUser }) => {
 				if (!userDocument.exists) {
 					createUserDocument(user);
 				}
+			} else {
+				setCurrentUser(null);
 			}
 		});
 

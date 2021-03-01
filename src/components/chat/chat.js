@@ -62,7 +62,7 @@ const Chat = ({ currentUser }) => {
 				<Message
 					text={data.text}
 					key={data.mid}
-					self={data.createdBy === currentUser.uid ? true : false}
+					self={data.createdBy === currentUser.userId ? true : false}
 					senderId={data.createdBy}
 				/>
 			);

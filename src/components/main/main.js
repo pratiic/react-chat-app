@@ -3,11 +3,12 @@ import React from "react";
 import "./main.scss";
 
 import Chat from "../../components/chat/chat";
+import UsersContainer from "../../components/users-container/users-container";
 
 const Main = () => {
 	return (
 		<div className="main">
-			<div></div>
+			<UsersContainer />
 			<Chat />
 			<div></div>
 		</div>

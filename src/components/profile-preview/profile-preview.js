@@ -18,7 +18,7 @@ const ProfilePreview = ({ currentUser }) => {
 					userLetter={getProfileLetter(currentUser)}
 					profilePicture={getProfilePicture(currentUser)}
 				/>
-				<p className="username">{currentUser.displayName}</p>
+				<p className="username">{currentUser.username}</p>
 			</React.Fragment>
 		</div>
 	);
