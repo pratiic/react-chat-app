@@ -27,8 +27,7 @@ const Chat = ({ currentUser }) => {
 
 	useEffect(() => {
 		scrollDiv.current.scrollIntoView();
-		console.log(scrollDiv.current);
-	}, [scrollDiv]);
+	}, [messages]);
 
 	return (
 		<div className="chat">
@@ -44,6 +43,7 @@ const Chat = ({ currentUser }) => {
 									? true
 									: false
 							}
+							senderId={data.createdBy}
 						/>
 					);
 				})}

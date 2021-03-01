@@ -1,13 +1,15 @@
 import React from "react";
 
-const ProfilePicture = ({ userLetter, profilePicture }) => {
+import "./profile-picture.scss";
+
+const ProfilePicture = ({ userLetter, profilePicture, small }) => {
+	const profilePictureClass = small
+		? `profile-picture small`
+		: `profile-picture`;
+
 	return (
-		<div className="profile-picture">
-			{profilePicture ? (
-				<img src={profilePicture} alt="" className="profile-picture" />
-			) : (
-				{ userLetter }
-			)}
+		<div className={profilePictureClass}>
+			{profilePicture ? <img src={profilePicture} alt="" /> : userLetter}
 		</div>
 	);
 };

@@ -3,6 +3,11 @@ import { connect } from "react-redux";
 
 import "./profile-preview.scss";
 
+import {
+	getProfileLetter,
+	getProfilePicture,
+} from "../../utils/utils.components";
+
 import ProfilePicture from "../profile-picture/profile-picture";
 
 const ProfilePreview = ({ currentUser }) => {
@@ -10,14 +15,8 @@ const ProfilePreview = ({ currentUser }) => {
 		<div className="profile-preview">
 			<React.Fragment>
 				<ProfilePicture
-					userLetter={
-						currentUser.displayName
-							? currentUser.displayName[0]
-							: currentUser.email[0]
-					}
-					profilePicture={
-						currentUser.photoURL ? currentUser.photoURL : null
-					}
+					userLetter={getProfileLetter(currentUser)}
+					profilePicture={getProfilePicture(currentUser)}
 				/>
 				<p className="username">{currentUser.displayName}</p>
 			</React.Fragment>

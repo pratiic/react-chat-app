@@ -1,5 +1,33 @@
 @import "../../sass/variables";
 
+.message-container {
+	display: flex;
+	width: fit-content;
+	justify-content: center;
+	align-items: center;
+	padding: 0 0.7rem;
+	margin-bottom: 1rem;
+
+	&.self {
+		margin-left: auto;
+
+		.message {
+			background-color: $color-blue;
+			order: 1;
+		}
+
+		.profile-picture {
+			order: 2;
+			margin: 0 0 0 0.5rem;
+		}
+	}
+
+	.profile-picture {
+		order: 1;
+		margin: 0 0.5rem 0 0;
+	}
+}
+
 .message {
 	background-color: $color-grey-light;
 	font-size: 1.55rem;
@@ -7,11 +35,7 @@
 	padding: 0.5rem 0.7rem;
 	border-radius: 5px;
 	width: fit-content;
-	max-width: 85%;
-	margin-bottom: 0.7rem;
-
-	&.self {
-		background-color: $color-blue;
-		margin-left: auto;
-	}
+	display: flex;
+	align-items: center;
+	order: 2;
 }
