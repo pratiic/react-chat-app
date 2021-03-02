@@ -11,7 +11,7 @@ import {
 
 import ProfilePicture from "../profile-picture/profile-picture";
 
-const Message = ({ text, self, currentUser, senderId }) => {
+const Message = ({ text, self, currentUser, senderId, createdAt }) => {
 	const [sentBy, setSentBy] = useState(null);
 
 	const getSentBy = async () => {
@@ -31,6 +31,14 @@ const Message = ({ text, self, currentUser, senderId }) => {
 		//eslint-disable-next-line
 	}, []);
 
+	const getCreatedTime = (milliseconds) => {
+		const date = new Date(milliseconds);
+		const hours = date.getHours();
+		const minutes = date.getMinutes();
+		const amPm = hours > 12 ? "pm" : "am";
+		return `${hours > 12 ? hours - 12 : hours}:${minutes} ${amPm}`;
+	};
+
 	const messageContainerClassName = self
 		? `message-container self`
 		: `message-container`;
@@ -43,6 +51,7 @@ const Message = ({ text, self, currentUser, senderId }) => {
 				size="small"
 			/>
 			<div className="message">{text}</div>
+			<div className="created-at">{getCreatedTime(createdAt)}</div>
 		</div>
 	);
 };

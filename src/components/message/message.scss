@@ -2,30 +2,40 @@
 
 .message-container {
 	display: flex;
-	width: fit-content;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	padding: 0 0.7rem;
 	margin-bottom: 1rem;
-	max-width: 85%;
-
-	&.self {
-		margin-left: auto;
-
-		.message {
-			background-color: $color-blue;
-			order: 1;
-		}
-
-		.profile-picture {
-			order: 2;
-			margin: 0 0 0 0.5rem;
-		}
-	}
 
 	.profile-picture {
 		order: 1;
 		margin: 0 0.5rem 0 0;
+	}
+
+	.created-at {
+		font-size: 1.35rem;
+		color: grey;
+		order: 3;
+		margin: 0 0 0 0.7rem;
+	}
+
+	&.self {
+		justify-content: flex-end;
+
+		.message {
+			background-color: $color-blue;
+			order: 2;
+		}
+
+		.profile-picture {
+			order: 3;
+			margin: 0 0 0 0.5rem;
+		}
+
+		.created-at {
+			order: 1;
+			margin: 0 0.7rem 0 0;
+		}
 	}
 }
 
@@ -39,4 +49,5 @@
 	display: flex;
 	align-items: center;
 	order: 2;
+	max-width: 80%;
 }

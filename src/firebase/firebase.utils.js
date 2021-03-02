@@ -29,7 +29,6 @@ export const createUserDocument = async (user) => {
 		email: user.email,
 		photoURL: user.photoURL,
 		userId: user.uid,
-		contacts: [],
 	};
 
 	await firestore.collection("users").doc(user.uid).set(newUser);
@@ -61,11 +60,4 @@ export const createMessageDocument = async (message, currentUser, chatUser) => {
 			.doc(`${message}${currentUser.userId}${new Date().getTime()}`)
 			.set(newMessage);
 	}
-
-	// await firestore
-	// 	.collection("chats")
-	// 	.doc(`${currentUser.userId}${chatUser.userId}`)
-	// 	.collection("messages")
-	// 	.doc(`${message}${currentUser.userId}${new Date().getTime()}`)
-	// 	.set(newMessage);
 };

@@ -99,12 +99,14 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 
 		return sortedMessages.map((message) => {
 			const data = message.data();
+			console.log(data);
 			return (
 				<Message
 					text={data.text}
 					key={data.mid}
 					self={data.createdBy === currentUser.userId ? true : false}
 					senderId={data.createdBy}
+					createdAt={data.createdAt}
 				/>
 			);
 		});
