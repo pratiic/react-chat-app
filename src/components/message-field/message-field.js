@@ -8,7 +8,7 @@ import { createMessageDocument } from "../../firebase/firebase.utils";
 import { ReactComponent as SendIcon } from "../../assets/icons/send.svg";
 import { ReactComponent as ClearIcon } from "../../assets/icons/close.svg";
 
-const MessageField = ({ currentUser }) => {
+const MessageField = ({ currentUser, chatUser }) => {
 	const [message, setMessage] = useState("");
 
 	const inputRef = useRef(null);
@@ -25,7 +25,7 @@ const MessageField = ({ currentUser }) => {
 	const handleFormSubmit = (event) => {
 		event.preventDefault();
 		if (message.length > 0) {
-			createMessageDocument(message, currentUser);
+			createMessageDocument(message, currentUser, chatUser);
 		}
 		setMessage("");
 	};
@@ -53,6 +53,7 @@ const MessageField = ({ currentUser }) => {
 const mapStateToProps = (state) => {
 	return {
 		currentUser: state.currentUser.currentUser,
+		chatUser: state.chatUser.chatUser,
 	};
 };
 

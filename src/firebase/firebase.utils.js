@@ -35,16 +35,37 @@ export const createUserDocument = async (user) => {
 	await firestore.collection("users").doc(user.uid).set(newUser);
 };
 
-export const createMessageDocument = async (message, currentUser) => {
+export const createMessageDocument = async (message, currentUser, chatUser) => {
 	const newMessage = {
 		text: message,
 		createdBy: currentUser.userId,
 		createdAt: new Date().getTime(),
-		mid: `${message}${currentUser.uid}${new Date().getTime()}`,
+		mid: `${message}${currentUser.userId}${new Date().getTime()}`,
 	};
 
-	await firestore
-		.collection("messages")
-		.doc(`${currentUser.uid}${new Date().getTime()}`)
-		.set(newMessage);
+	const messagesCollectionRef = firestore
+		.collection("chats")
+		.doc(`${chatUser.userId}${currentUser.userId}`)
+		.collection("messages");
+	const messagesCollectionData = await messagesCollectionRef.get();
+
+	if (messagesCollectionData.empty) {
+		await firestore
+			.collection("chats")
+			.doc(`${currentUser.userId}${chatUser.userId}`)
+			.collection("messages")
+			.doc(`${message}${currentUser.userId}${new Date().getTime()}`)
+			.set(newMessage);
+	} else {
+		await messagesCollectionRef
+			.doc(`${message}${currentUser.userId}${new Date().getTime()}`)
+			.set(newMessage);
+	}
+
+	// await firestore
+	// 	.collection("chats")
+	// 	.doc(`${currentUser.userId}${chatUser.userId}`)
+	// 	.collection("messages")
+	// 	.doc(`${message}${currentUser.userId}${new Date().getTime()}`)
+	// 	.set(newMessage);
 };

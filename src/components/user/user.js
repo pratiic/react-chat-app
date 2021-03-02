@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 
 import "./user.scss";
 
-import { firestore } from "../../firebase/firebase.utils";
+import {
+	firestore,
+	createContactDocument,
+} from "../../firebase/firebase.utils";
 import { setChatUser } from "../../redux/chat-user/chat-user.actions";
 
 import {
@@ -20,39 +23,6 @@ const User = ({ user, setChatUser, currentUser, chatUser }) => {
 
 	const handleUserClick = () => {
 		setChatUser(user);
-		displayChatWithChatUser();
-	};
-
-	const displayChatWithChatUser = async () => {
-		const chatUserDocRef = await firestore
-			.collection("users")
-			.doc(currentUser.userId)
-			.get();
-
-		if (
-			chatUserDocRef
-				.data()
-				.contacts.every((contact) => contact.userId !== user.userId)
-		) {
-			console.log("pratiic");
-			await firestore
-				.collection("users")
-				.doc(currentUser.userId)
-				.set(
-					{
-						contacts: [
-							...chatUserDocRef.data().contacts,
-							{
-								userId: user.userId,
-								email: user.email,
-								username: user.username,
-								messages: [],
-							},
-						],
-					},
-					{ merge: true }
-				);
-		}
 	};
 
 	return (

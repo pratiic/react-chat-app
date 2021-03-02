@@ -4,59 +4,91 @@ import { connect } from "react-redux";
 import "./chat.scss";
 
 import { firestore } from "../../firebase/firebase.utils";
+import { setChatUser } from "../../redux/chat-user/chat-user.actions";
 
 import MessageField from "../message-field/message-field";
 import Message from "../message/message";
 
-const Chat = ({ currentUser }) => {
+const Chat = ({ currentUser, chatUser, setChatUser }) => {
 	const [messages, setMessages] = useState([]);
 	const [totalFetchedMessages, setTotalFetchedMessages] = useState(0);
 	const [fetching, setFetching] = useState(false);
 	const [top, setTop] = useState(0);
 	const [totalMessages, setTotalMessages] = useState(0);
+	const messageFetchNumber = 25;
 
 	const scrollDivBottom = useRef(null);
 	const scrollDivTop = useRef(null);
 
 	useEffect(() => {
-		fetchMessages(25);
-		setTotalFetchedMessages(25);
+		if (chatUser) {
+			fetchMessages(messageFetchNumber);
+			setTotalFetchedMessages(messageFetchNumber);
+		}
 		//eslint-disable-next-line
-	}, []);
+	}, [chatUser]);
 
 	useEffect(() => {
-		if (top <= 0) {
+		if (top <= 0 && scrollDivBottom.current) {
 			scrollDivBottom.current.scrollIntoView();
 		}
 		//eslint-disable-next-line
 	}, [messages]);
 
-	// useEffect(() => {
-	// 	scrollDivTop.current.scrollIntoView();
-	// 	console.log(scrollDivTop.current);
-	// }, [totalFetchedMessages]);
+	useEffect(() => {
+		return () => {
+			setChatUser(null);
+		};
+	}, []);
 
-	const fetchMessages = (fetchNumber) => {
-		firestore.collection("messages").onSnapshot(async (snapshot) => {
-			setFetching(true);
-			const messagesRef = firestore.collection("messages");
-			const messagesRefData = await messagesRef.get();
-			setTotalMessages(messagesRefData.docs.length);
-			const someKindOfThing = await messagesRef
-				.orderBy("createdAt", "desc")
-				.limit(fetchNumber)
-				.get();
-			const messagesFromFirestore = someKindOfThing.docs;
-			setMessages(messagesFromFirestore);
-			setFetching(false);
-			setTop(0);
-		});
+	const fetchMessages = async (fetchNumber) => {
+		const currentToChatRef = firestore
+			.collection("chats")
+			.doc(`${currentUser.userId}${chatUser.userId}`)
+			.collection("messages");
+		const currentToChatData = await currentToChatRef.get();
+
+		const chatToCurrentRef = firestore
+			.collection("chats")
+			.doc(`${chatUser.userId}${currentUser.userId}`)
+			.collection("messages");
+		const chatToCurrentData = await chatToCurrentRef.get();
+
+		const docToFetch = chatToCurrentData.empty
+			? `${currentUser.userId}${chatUser.userId}`
+			: `${chatUser.userId}${currentUser.userId}`;
+
+		firestore
+			.collection("chats")
+			.doc(docToFetch)
+			.collection("messages")
+			.onSnapshot(async (snapshot) => {
+				setFetching(true);
+				const messagesRef = firestore
+					.collection("chats")
+					.doc(docToFetch)
+					.collection("messages");
+
+				const messagesRefData = await messagesRef.get();
+
+				setTotalMessages(messagesRefData.docs.length);
+
+				const someKindOfThing = await messagesRef
+					.orderBy("createdAt", "desc")
+					.limit(fetchNumber)
+					.get();
+
+				setMessages(someKindOfThing.docs);
+
+				setFetching(false);
+				setTop(0);
+			});
 	};
 
 	const renderMessages = () => {
-		const revMessages = reverseArray(messages);
+		const sortedMessages = reverseArray(messages);
 
-		return revMessages.map((message) => {
+		return sortedMessages.map((message) => {
 			const data = message.data();
 			return (
 				<Message
@@ -79,9 +111,22 @@ const Chat = ({ currentUser }) => {
 		return reversedArray;
 	};
 
+	const sortArray = (array) => {
+		for (let i = 0; i < array.length; i++) {
+			for (let j = 0; j < array.length - i - 1; j++) {
+				if (array[j].data().createdAt > array[j + 1].data().createdAt) {
+					let temp = array[j];
+					array[j] = array[j + 1];
+					array[j + 1] = temp;
+				}
+			}
+		}
+
+		return array;
+	};
+
 	const handleLoadMoreClick = () => {
-		fetchMessages(totalFetchedMessages + 25);
-		setTotalFetchedMessages(totalFetchedMessages + 25);
+		fetchMessages(totalFetchedMessages + messageFetchNumber);
 		setTop(top + 1);
 	};
 
@@ -95,13 +140,42 @@ const Chat = ({ currentUser }) => {
 
 	return (
 		<div className="chat">
-			<div className="chat-main">
-				{renderLoadMoreButton()}
-				<div className="scroll" ref={scrollDivTop}></div>
-				{renderMessages()}
-				<div className="scroll" ref={scrollDivBottom}></div>
-			</div>
-			<MessageField />
+			{chatUser ? (
+				<React.Fragment>
+					<div className="chat-main">
+						{/* {messages.length === 0 ? (
+							<p className="chat-title chat-title-small">
+								loading messages...
+							</p>
+						) : (
+							<React.Fragment>
+								{renderLoadMoreButton()}
+								<div
+									className="scroll"
+									ref={scrollDivTop}
+								></div>
+								{renderMessages()}
+								<div
+									className="scroll"
+									ref={scrollDivBottom}
+								></div>
+							</React.Fragment>
+						)} */}
+						<React.Fragment>
+							{console.log(messages)}
+							{renderLoadMoreButton()}
+							<div className="scroll" ref={scrollDivTop}></div>
+							{renderMessages()}
+							<div className="scroll" ref={scrollDivBottom}></div>
+						</React.Fragment>
+					</div>
+					<MessageField />
+				</React.Fragment>
+			) : (
+				<p className="chat-title">
+					click on one of the users to start chat
+				</p>
+			)}
 		</div>
 	);
 };
@@ -109,7 +183,16 @@ const Chat = ({ currentUser }) => {
 const mapStateToProps = (state) => {
 	return {
 		currentUser: state.currentUser.currentUser,
+		chatUser: state.chatUser.chatUser,
 	};
 };
 
-export default connect(mapStateToProps)(Chat);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setChatUser: (chatUser) => {
+			dispatch(setChatUser(chatUser));
+		},
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
