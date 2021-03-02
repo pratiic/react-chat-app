@@ -15,6 +15,7 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 	const [fetching, setFetching] = useState(false);
 	const [top, setTop] = useState(0);
 	const [totalMessages, setTotalMessages] = useState(0);
+	const [noMessages, setNoMessages] = useState(false);
 	const messageFetchNumber = 25;
 
 	const scrollDivBottom = useRef(null);
@@ -39,14 +40,14 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 		return () => {
 			setChatUser(null);
 		};
+		//eslint-disable-next-line
 	}, []);
 
 	const fetchMessages = async (fetchNumber) => {
-		const currentToChatRef = firestore
-			.collection("chats")
-			.doc(`${currentUser.userId}${chatUser.userId}`)
-			.collection("messages");
-		const currentToChatData = await currentToChatRef.get();
+		// const currentToChatRef = firestore
+		// 	.collection("chats")
+		// 	.doc(`${currentUser.userId}${chatUser.userId}`)
+		// 	.collection("messages");
 
 		const chatToCurrentRef = firestore
 			.collection("chats")
@@ -64,6 +65,9 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 			.collection("messages")
 			.onSnapshot(async (snapshot) => {
 				setFetching(true);
+
+				setNoMessages(false);
+
 				const messagesRef = firestore
 					.collection("chats")
 					.doc(docToFetch)
@@ -77,6 +81,11 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 					.orderBy("createdAt", "desc")
 					.limit(fetchNumber)
 					.get();
+
+				if (someKindOfThing.docs.length === 0) {
+					console.log("pratik");
+					setNoMessages(true);
+				}
 
 				setMessages(someKindOfThing.docs);
 
@@ -111,19 +120,19 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 		return reversedArray;
 	};
 
-	const sortArray = (array) => {
-		for (let i = 0; i < array.length; i++) {
-			for (let j = 0; j < array.length - i - 1; j++) {
-				if (array[j].data().createdAt > array[j + 1].data().createdAt) {
-					let temp = array[j];
-					array[j] = array[j + 1];
-					array[j + 1] = temp;
-				}
-			}
-		}
+	// const sortArray = (array) => {
+	// 	for (let i = 0; i < array.length; i++) {
+	// 		for (let j = 0; j < array.length - i - 1; j++) {
+	// 			if (array[j].data().createdAt > array[j + 1].data().createdAt) {
+	// 				let temp = array[j];
+	// 				array[j] = array[j + 1];
+	// 				array[j + 1] = temp;
+	// 			}
+	// 		}
+	// 	}
 
-		return array;
-	};
+	// 	return array;
+	// };
 
 	const handleLoadMoreClick = () => {
 		fetchMessages(totalFetchedMessages + messageFetchNumber);
@@ -138,42 +147,39 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 		) : null;
 	};
 
+	const renderChat = () => {
+		if (messages.length === 0 && !noMessages) {
+			return (
+				<p className="chat-title chat-title-small">
+					Loading messages...
+				</p>
+			);
+		}
+
+		if (noMessages) {
+			return <p className="chat-title chat-title-small">No messages</p>;
+		}
+
+		return (
+			<React.Fragment>
+				{renderLoadMoreButton()}
+				<div className="scroll" ref={scrollDivTop}></div>
+				{renderMessages()}
+				<div className="scroll" ref={scrollDivBottom}></div>
+			</React.Fragment>
+		);
+	};
+
 	return (
 		<div className="chat">
 			{chatUser ? (
 				<React.Fragment>
-					<div className="chat-main">
-						{/* {messages.length === 0 ? (
-							<p className="chat-title chat-title-small">
-								loading messages...
-							</p>
-						) : (
-							<React.Fragment>
-								{renderLoadMoreButton()}
-								<div
-									className="scroll"
-									ref={scrollDivTop}
-								></div>
-								{renderMessages()}
-								<div
-									className="scroll"
-									ref={scrollDivBottom}
-								></div>
-							</React.Fragment>
-						)} */}
-						<React.Fragment>
-							{console.log(messages)}
-							{renderLoadMoreButton()}
-							<div className="scroll" ref={scrollDivTop}></div>
-							{renderMessages()}
-							<div className="scroll" ref={scrollDivBottom}></div>
-						</React.Fragment>
-					</div>
+					<div className="chat-main">{renderChat()}</div>
 					<MessageField />
 				</React.Fragment>
 			) : (
 				<p className="chat-title">
-					click on one of the users to start chat
+					Click on one of the users to start chat
 				</p>
 			)}
 		</div>

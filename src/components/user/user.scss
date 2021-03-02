@@ -15,4 +15,9 @@
 	&:hover {
 		background-color: $color-grey-light;
 	}
+
+	&.active {
+		background-color: $color-grey-light;
+		border-bottom: 1px solid $color-grey-light;
+	}
 }

@@ -7,13 +7,26 @@ import { firestore } from "../../firebase/firebase.utils";
 
 import User from "../user/user";
 
-const UsersContainer = ({ currentUser }) => {
+const UsersContainer = ({ currentUser, chatUser }) => {
 	const [users, setUsers] = useState([]);
 
 	useEffect(() => {
 		fetchUsers();
 		//eslint-disable-next-line
 	}, []);
+
+	useEffect(() => {
+		setUsers(
+			users.map((user) => {
+				if (user.userId === chatUser.userId) {
+					console.log("pratiic");
+					return { ...user, active: true };
+				}
+				return { ...user, active: false };
+			})
+		);
+		//eslint-disable-next-line
+	}, [chatUser]);
 
 	const fetchUsers = async () => {
 		const usersRef = await firestore.collection("users").get();
@@ -25,7 +38,7 @@ const UsersContainer = ({ currentUser }) => {
 
 	return (
 		<div className="users-container">
-			<div className="users-container-header">users</div>
+			{/* <div className="users-container-header">users</div> */}
 			{users
 				.filter((user) => user.userId !== currentUser.userId)
 				.map((user) => {
@@ -38,6 +51,7 @@ const UsersContainer = ({ currentUser }) => {
 const mapStateToProps = (state) => {
 	return {
 		currentUser: state.currentUser.currentUser,
+		chatUser: state.chatUser.chatUser,
 	};
 };
 
