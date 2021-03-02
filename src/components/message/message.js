@@ -9,10 +9,15 @@ import {
 	getProfilePicture,
 } from "../../utils/utils.components";
 
+import { ReactComponent as VerticalDotMenu } from "../../assets/icons/vertical-dot-menu.svg";
+
 import ProfilePicture from "../profile-picture/profile-picture";
+import DropdownMenu from "../dropdown-menu/dropdown-menu";
+import MenuItem from "../menu-item/menu-item";
 
 const Message = ({ text, self, currentUser, senderId, createdAt }) => {
 	const [sentBy, setSentBy] = useState(null);
+	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
 
 	const getSentBy = async () => {
 		if (self) {
@@ -39,6 +44,10 @@ const Message = ({ text, self, currentUser, senderId, createdAt }) => {
 		return `${hours > 12 ? hours - 12 : hours}:${minutes} ${amPm}`;
 	};
 
+	const handleVerticalDotMenuClick = () => {
+		setShowDropdownMenu(!showDropdownMenu);
+	};
+
 	const messageContainerClassName = self
 		? `message-container self`
 		: `message-container`;
@@ -52,6 +61,16 @@ const Message = ({ text, self, currentUser, senderId, createdAt }) => {
 			/>
 			<div className="message">{text}</div>
 			<div className="created-at">{getCreatedTime(createdAt)}</div>
+			<div className="message-control">
+				<VerticalDotMenu
+					className="icon vertical-dot-menu"
+					onClick={handleVerticalDotMenuClick}
+				/>
+				<DropdownMenu show={showDropdownMenu}>
+					<MenuItem text="remove" />
+					<MenuItem text="edit" />
+				</DropdownMenu>
+			</div>
 		</div>
 	);
 };

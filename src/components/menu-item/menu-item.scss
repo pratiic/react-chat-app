@@ -1,0 +1,27 @@
+@import "../../sass/variables";
+
+.menu-item {
+	color: lightgrey;
+	padding: 0.3rem 1.3rem;
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
+
+	&:not(:last-of-type) {
+		border-bottom: 1px solid $color-grey-light;
+	}
+
+	&:first-of-type {
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+	}
+
+	&:last-of-type {
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+	}
+
+	&:hover {
+		background-color: $color-grey-light;
+	}
+}
