@@ -14,6 +14,8 @@ import {
 import {
 	setEditing,
 	setMessageFieldContent,
+	setMid,
+	setParentDoc,
 } from "../../redux/message-control/message-control.actions";
 
 import { ReactComponent as VerticalDotMenu } from "../../assets/icons/vertical-dot-menu.svg";
@@ -35,6 +37,8 @@ const Message = ({
 	messageFieldContent,
 	setEditing,
 	setMessageFieldContent,
+	setMid,
+	setParentDoc,
 }) => {
 	const [sentBy, setSentBy] = useState(null);
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
@@ -44,14 +48,6 @@ const Message = ({
 		//eslint-disable-next-line
 	}, []);
 
-	useEffect(() => {
-		if (!editingMessage && messageFieldContent) {
-			updateMessageDocument(mid, parentDoc, "text", messageFieldContent);
-			setMessageFieldContent("");
-		}
-		//eslint-disable-next-line
-	}, [editingMessage]);
-
 	const getMessageContainerClassName = () => {
 		let messageContainerClassName = "message-container";
 		if (self) {
@@ -59,7 +55,6 @@ const Message = ({
 		}
 
 		if (removed) {
-			console.log("pratiic");
 			messageContainerClassName += " removed";
 		}
 
@@ -92,11 +87,19 @@ const Message = ({
 
 	const handleRemoveOptionClick = () => {
 		updateMessageDocument(mid, parentDoc, "removed", true);
+		updateMessageDocument(
+			mid,
+			parentDoc,
+			"text",
+			"this message has been deleted"
+		);
 		hideDropdownMenu();
 	};
 
 	const handleEditOptionClick = () => {
 		setMessageFieldContent(text);
+		setMid(mid);
+		setParentDoc(parentDoc);
 		setEditing(true);
 		hideDropdownMenu();
 	};
@@ -112,9 +115,7 @@ const Message = ({
 				profilePicture={getProfilePicture(sentBy)}
 				size="small"
 			/>
-			<div className="message">
-				{removed ? "this message has been deleted" : text}
-			</div>
+			<div className="message">{text}</div>
 			<div className="created-at">{getCreatedTime(createdAt)}</div>
 			{self && !removed ? (
 				<div className="message-control">
@@ -153,6 +154,12 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		setMessageFieldContent: (messageFieldContent) => {
 			dispatch(setMessageFieldContent(messageFieldContent));
+		},
+		setMid: (mid) => {
+			dispatch(setMid(mid));
+		},
+		setParentDoc: (parentDoc) => {
+			dispatch(setParentDoc(parentDoc));
 		},
 	};
 };

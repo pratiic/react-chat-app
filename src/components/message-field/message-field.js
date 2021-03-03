@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 
 import "./message-field.scss";
 
-import { createMessageDocument } from "../../firebase/firebase.utils";
+import {
+	createMessageDocument,
+	updateMessageDocument,
+} from "../../firebase/firebase.utils";
 import {
 	setMessageFieldContent,
 	setEditing,
@@ -17,6 +20,8 @@ const MessageField = ({
 	chatUser,
 	editingMessage,
 	messageFieldContent,
+	mid,
+	parentDoc,
 	setMessageFieldContent,
 	setEditing,
 }) => {
@@ -56,6 +61,8 @@ const MessageField = ({
 			setMessage("");
 		} else {
 			setEditing(false);
+			updateMessageDocument(mid, parentDoc, "text", messageFieldContent);
+			setMessageFieldContent("");
 		}
 	};
 
@@ -85,6 +92,8 @@ const mapStateToProps = (state) => {
 		chatUser: state.chatUser.chatUser,
 		editingMessage: state.messageControl.editingMessage,
 		messageFieldContent: state.messageControl.messageFieldContent,
+		mid: state.messageControl.mid,
+		parentDoc: state.messageControl.parentDoc,
 	};
 };
 

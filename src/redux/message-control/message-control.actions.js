@@ -13,3 +13,17 @@ export const setMessageFieldContent = (messageFieldContent) => {
 		payload: messageFieldContent,
 	};
 };
+
+export const setMid = (mid) => {
+	return {
+		type: messageControlTypes.SET_MID,
+		payload: mid,
+	};
+};
+
+export const setParentDoc = (parentDoc) => {
+	return {
+		type: messageControlTypes.SET_PARENT_DOC,
+		payload: parentDoc,
+	};
+};
