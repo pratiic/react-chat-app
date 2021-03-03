@@ -35,18 +35,22 @@ export const createUserDocument = async (user) => {
 };
 
 export const createMessageDocument = async (message, currentUser, chatUser) => {
-	const newMessage = {
-		text: message,
-		createdBy: currentUser.userId,
-		createdAt: new Date().getTime(),
-		mid: `${message}${currentUser.userId}${new Date().getTime()}`,
-	};
-
 	const messagesCollectionRef = firestore
 		.collection("chats")
 		.doc(`${chatUser.userId}${currentUser.userId}`)
 		.collection("messages");
 	const messagesCollectionData = await messagesCollectionRef.get();
+
+	const newMessage = {
+		text: message,
+		createdBy: currentUser.userId,
+		createdAt: new Date().getTime(),
+		mid: `${message}${currentUser.userId}${new Date().getTime()}`,
+		parentDoc: messagesCollectionData.empty
+			? `${currentUser.userId}${chatUser.userId}`
+			: `${chatUser.userId}${currentUser.userId}`,
+		removed: false,
+	};
 
 	if (messagesCollectionData.empty) {
 		await firestore
@@ -60,4 +64,14 @@ export const createMessageDocument = async (message, currentUser, chatUser) => {
 			.doc(`${message}${currentUser.userId}${new Date().getTime()}`)
 			.set(newMessage);
 	}
+};
+
+export const updateMessageDocument = async (mid, parentDoc, field, value) => {
+	const documentRef = await firestore
+		.collection("chats")
+		.doc(parentDoc)
+		.collection("messages")
+		.doc(mid);
+
+	await documentRef.update({ [field]: value });
 };

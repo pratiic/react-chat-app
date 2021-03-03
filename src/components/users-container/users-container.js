@@ -19,7 +19,6 @@ const UsersContainer = ({ currentUser, chatUser }) => {
 		setUsers(
 			users.map((user) => {
 				if (user.userId === chatUser.userId) {
-					console.log("pratiic");
 					return { ...user, active: true };
 				}
 				return { ...user, active: false };

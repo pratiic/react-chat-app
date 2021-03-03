@@ -83,7 +83,6 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 					.get();
 
 				if (someKindOfThing.docs.length === 0) {
-					console.log("pratik");
 					setNoMessages(true);
 				}
 
@@ -99,14 +98,16 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 
 		return sortedMessages.map((message) => {
 			const data = message.data();
-			console.log(data);
 			return (
 				<Message
 					text={data.text}
 					key={data.mid}
 					self={data.createdBy === currentUser.userId ? true : false}
+					mid={data.mid}
 					senderId={data.createdBy}
 					createdAt={data.createdAt}
+					removed={data.removed}
+					parentDoc={data.parentDoc}
 				/>
 			);
 		});

@@ -1,20 +1,45 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 
 import "./message-field.scss";
 
 import { createMessageDocument } from "../../firebase/firebase.utils";
+import {
+	setMessageFieldContent,
+	setEditing,
+} from "../../redux/message-control/message-control.actions";
 
 import { ReactComponent as SendIcon } from "../../assets/icons/send.svg";
 import { ReactComponent as ClearIcon } from "../../assets/icons/close.svg";
 
-const MessageField = ({ currentUser, chatUser }) => {
+const MessageField = ({
+	currentUser,
+	chatUser,
+	editingMessage,
+	messageFieldContent,
+	setMessageFieldContent,
+	setEditing,
+}) => {
 	const [message, setMessage] = useState("");
 
 	const inputRef = useRef(null);
 
+	useEffect(() => {
+		inputRef.current.focus();
+	});
+
+	useEffect(() => {
+		if (editingMessage) {
+			inputRef.current.focus();
+		}
+	}, [editingMessage]);
+
 	const handleInputChange = (event) => {
-		setMessage(event.target.value);
+		if (!editingMessage) {
+			setMessage(event.target.value);
+		} else {
+			setMessageFieldContent(event.target.value);
+		}
 	};
 
 	const handleClearButtonClick = () => {
@@ -24,10 +49,14 @@ const MessageField = ({ currentUser, chatUser }) => {
 
 	const handleFormSubmit = (event) => {
 		event.preventDefault();
-		if (message.length > 0) {
-			createMessageDocument(message, currentUser, chatUser);
+		if (!editingMessage) {
+			if (message.length > 0) {
+				createMessageDocument(message, currentUser, chatUser);
+			}
+			setMessage("");
+		} else {
+			setEditing(false);
 		}
-		setMessage("");
 	};
 
 	return (
@@ -36,7 +65,7 @@ const MessageField = ({ currentUser, chatUser }) => {
 				type="text"
 				placeholder="type your message..."
 				className="message-field-input"
-				value={message}
+				value={editingMessage ? messageFieldContent : message}
 				ref={inputRef}
 				onChange={handleInputChange}
 			/>
@@ -54,7 +83,20 @@ const mapStateToProps = (state) => {
 	return {
 		currentUser: state.currentUser.currentUser,
 		chatUser: state.chatUser.chatUser,
+		editingMessage: state.messageControl.editingMessage,
+		messageFieldContent: state.messageControl.messageFieldContent,
 	};
 };
 
-export default connect(mapStateToProps)(MessageField);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setMessageFieldContent: (messageFieldContent) => {
+			dispatch(setMessageFieldContent(messageFieldContent));
+		},
+		setEditing: (editing) => {
+			dispatch(setEditing(editing));
+		},
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageField);

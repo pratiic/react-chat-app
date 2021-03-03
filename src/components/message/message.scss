@@ -18,7 +18,7 @@
 
 	.created-at {
 		font-size: 1.35rem;
-		color: grey;
+		color: $color-muted;
 		order: 3;
 		// margin: 0 0 0 0.7rem;
 	}
@@ -61,7 +61,7 @@
 
 	.dropdown-menu {
 		position: absolute;
-		top: 110%;
+		top: 120%;
 		right: 0;
 		z-index: 10;
 		display: none;
@@ -94,6 +94,14 @@
 
 		.dropdown-menu {
 			left: 0;
+		}
+	}
+
+	&.removed {
+		.message {
+			border: 1px solid $color-red;
+			background-color: transparent;
+			color: $color-muted;
 		}
 	}
 }

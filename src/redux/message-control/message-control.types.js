@@ -1,0 +1,4 @@
+export const messageControlTypes = {
+	SET_EDITING: "SET_EDITING",
+	SET_MESSAGE_FIELD_CONTENT: "SET_MESSAGE_FIELD_CONTENT",
+};
