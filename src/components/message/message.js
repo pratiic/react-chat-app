@@ -6,6 +6,7 @@ import "./message.scss";
 import {
 	firestore,
 	updateMessageDocument,
+	updateRemovedFor,
 } from "../../firebase/firebase.utils";
 import {
 	getProfileLetter,
@@ -30,7 +31,7 @@ const Message = ({
 	currentUser,
 	senderId,
 	createdAt,
-	removed,
+	removedForEveryone,
 	parentDoc,
 	mid,
 	editingMessage,
@@ -42,11 +43,36 @@ const Message = ({
 }) => {
 	const [sentBy, setSentBy] = useState(null);
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+	const [removedForMe, setRemovedForMe] = useState(false);
 
 	useEffect(() => {
 		getSentBy();
+
+		getMessageRef();
+
 		//eslint-disable-next-line
 	}, []);
+
+	const getMessageRef = async () => {
+		firestore
+			.collection("chats")
+			.doc(parentDoc)
+			.collection("messages")
+			.doc(mid)
+			.collection("removedFor")
+			.onSnapshot(async (snapshot) => {
+				const messageRef = await firestore
+					.collection("chats")
+					.doc(parentDoc)
+					.collection("messages")
+					.doc(mid)
+					.collection("removedFor")
+					.doc(currentUser.userId)
+					.get();
+
+				setRemovedForMe(messageRef.exists);
+			});
+	};
 
 	const getMessageContainerClassName = () => {
 		let messageContainerClassName = "message-container";
@@ -54,7 +80,7 @@ const Message = ({
 			messageContainerClassName += " self";
 		}
 
-		if (removed) {
+		if (removedForEveryone || removedForMe) {
 			messageContainerClassName += " removed";
 		}
 
@@ -86,13 +112,7 @@ const Message = ({
 	};
 
 	const handleRemoveOptionClick = () => {
-		updateMessageDocument(mid, parentDoc, "removed", true);
-		updateMessageDocument(
-			mid,
-			parentDoc,
-			"text",
-			"this message has been deleted"
-		);
+		updateMessageDocument(mid, parentDoc, "removedForEveryone", true);
 		hideDropdownMenu();
 	};
 
@@ -104,8 +124,42 @@ const Message = ({
 		hideDropdownMenu();
 	};
 
+	const handleRemoveForMeOptionClick = () => {
+		updateRemovedFor(mid, parentDoc, currentUser.userId);
+		hideDropdownMenu();
+	};
+
 	const hideDropdownMenu = () => {
 		setShowDropdownMenu(!showDropdownMenu);
+	};
+
+	const renderMessage = () => {
+		return !removedForEveryone && !removedForMe ? (
+			<div className="message-control">
+				<VerticalDotMenu
+					className="icon vertical-dot-menu"
+					onClick={handleVerticalDotMenuClick}
+				/>
+				<DropdownMenu show={showDropdownMenu}>
+					<MenuItem
+						text="remove for me"
+						clickHandler={handleRemoveForMeOptionClick}
+					/>
+					{self ? (
+						<React.Fragment>
+							<MenuItem
+								text="remove"
+								clickHandler={handleRemoveOptionClick}
+							/>
+							<MenuItem
+								text="edit"
+								clickHandler={handleEditOptionClick}
+							/>
+						</React.Fragment>
+					) : null}
+				</DropdownMenu>
+			</div>
+		) : null;
 	};
 
 	return (
@@ -115,26 +169,15 @@ const Message = ({
 				profilePicture={getProfilePicture(sentBy)}
 				size="small"
 			/>
-			<div className="message">{text}</div>
+			<div className="message">
+				{removedForEveryone
+					? "this message has been removed for everyone"
+					: removedForMe
+					? "this message has been removed for you"
+					: text}
+			</div>
 			<div className="created-at">{getCreatedTime(createdAt)}</div>
-			{self && !removed ? (
-				<div className="message-control">
-					<VerticalDotMenu
-						className="icon vertical-dot-menu"
-						onClick={handleVerticalDotMenuClick}
-					/>
-					<DropdownMenu show={showDropdownMenu}>
-						<MenuItem
-							text="remove"
-							clickHandler={handleRemoveOptionClick}
-						/>
-						<MenuItem
-							text="edit"
-							clickHandler={handleEditOptionClick}
-						/>
-					</DropdownMenu>
-				</div>
-			) : null}
+			{renderMessage()}
 		</div>
 	);
 };

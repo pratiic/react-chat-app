@@ -106,7 +106,7 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 					mid={data.mid}
 					senderId={data.createdBy}
 					createdAt={data.createdAt}
-					removed={data.removed}
+					removedForEveryone={data.removedForEveryone}
 					parentDoc={data.parentDoc}
 				/>
 			);

@@ -49,7 +49,7 @@ export const createMessageDocument = async (message, currentUser, chatUser) => {
 		parentDoc: messagesCollectionData.empty
 			? `${currentUser.userId}${chatUser.userId}`
 			: `${chatUser.userId}${currentUser.userId}`,
-		removed: false,
+		removedForEveryone: false,
 	};
 
 	if (messagesCollectionData.empty) {
@@ -74,4 +74,15 @@ export const updateMessageDocument = async (mid, parentDoc, field, value) => {
 		.doc(mid);
 
 	await documentRef.update({ [field]: value });
+};
+
+export const updateRemovedFor = async (mid, parentDoc, userId) => {
+	await firestore
+		.collection("chats")
+		.doc(parentDoc)
+		.collection("messages")
+		.doc(mid)
+		.collection("removedFor")
+		.doc(userId)
+		.set({ userId: userId });
 };

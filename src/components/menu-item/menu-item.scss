@@ -6,6 +6,7 @@
 	cursor: pointer;
 	width: 100%;
 	text-align: center;
+	white-space: nowrap;
 
 	&:not(:last-of-type) {
 		border-bottom: 1px solid $color-grey-light;
