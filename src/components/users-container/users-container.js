@@ -9,11 +9,16 @@ import User from "../user/user";
 
 const UsersContainer = ({ currentUser, chatUser }) => {
 	const [users, setUsers] = useState([]);
+	const [numberOfUsers, setNumberOfUsers] = useState(0);
 
 	useEffect(() => {
 		fetchUsers();
 		//eslint-disable-next-line
 	}, []);
+
+	useEffect(() => {
+		setNumberOfUsers(users.length);
+	}, [users]);
 
 	useEffect(() => {
 		setUsers(
@@ -28,16 +33,21 @@ const UsersContainer = ({ currentUser, chatUser }) => {
 	}, [chatUser]);
 
 	const fetchUsers = async () => {
-		const usersRef = await firestore.collection("users").get();
-		const usersDocs = usersRef.docs.map((doc) => {
-			return { ...doc.data(), active: false };
+		firestore.collection("users").onSnapshot((snapshot) => {
+			console.log(snapshot);
+			const usersDocs = snapshot.docs.map((doc) => {
+				return { ...doc.data(), active: false };
+			});
+			setUsers(usersDocs);
 		});
-		setUsers(usersDocs);
 	};
 
 	return (
-		<div className="users-container">
-			{/* <div className="users-container-header">users</div> */}
+		<div
+			className={`users-container ${
+				numberOfUsers > 11 ? "scroll" : null
+			}`}
+		>
 			{users
 				.filter((user) => user.userId !== currentUser.userId)
 				.map((user) => {

@@ -14,6 +14,9 @@ import {
 
 import { ReactComponent as SendIcon } from "../../assets/icons/send.svg";
 import { ReactComponent as ClearIcon } from "../../assets/icons/close.svg";
+import { ReactComponent as EmojiIcon } from "../../assets/icons/emoji.svg";
+
+import EmojiPicker from "../../components/emoji-picker/emoji-picker";
 
 const MessageField = ({
 	currentUser,
@@ -26,6 +29,7 @@ const MessageField = ({
 	setEditing,
 }) => {
 	const [message, setMessage] = useState("");
+	const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
 	const inputRef = useRef(null);
 
@@ -59,6 +63,7 @@ const MessageField = ({
 				createMessageDocument(message, currentUser, chatUser);
 			}
 			setMessage("");
+			setShowEmojiPicker(false);
 		} else {
 			setEditing(false);
 			updateMessageDocument(mid, parentDoc, "text", messageFieldContent);
@@ -66,8 +71,18 @@ const MessageField = ({
 		}
 	};
 
+	const handleEmojiButtonClick = () => {
+		setShowEmojiPicker(!showEmojiPicker);
+	};
+
+	const insertEmoji = (emoji) => {
+		setMessage(`${message}${emoji}`);
+		inputRef.current.focus();
+	};
+
 	return (
 		<form className="message-field" onSubmit={handleFormSubmit}>
+			<EmojiPicker show={showEmojiPicker} insertEmoji={insertEmoji} />
 			<input
 				type="text"
 				placeholder="type your message..."
@@ -77,10 +92,14 @@ const MessageField = ({
 				onChange={handleInputChange}
 			/>
 			<div className="icons">
+				<EmojiIcon
+					className="icon emoji-icon"
+					onClick={handleEmojiButtonClick}
+				/>
+				<ClearIcon className="icon" onClick={handleClearButtonClick} />
 				<button className="send-button" type="submit">
 					<SendIcon className="icon" />
 				</button>
-				<ClearIcon className="icon" onClick={handleClearButtonClick} />
 			</div>
 		</form>
 	);

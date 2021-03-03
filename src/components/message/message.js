@@ -171,9 +171,9 @@ const Message = ({
 			/>
 			<div className="message">
 				{removedForEveryone
-					? "this message has been removed for everyone"
+					? "removed for everyone"
 					: removedForMe
-					? "this message has been removed for you"
+					? "removed for you"
 					: text}
 			</div>
 			<div className="created-at">{getCreatedTime(createdAt)}</div>

@@ -1,6 +1,19 @@
 @import "../../sass/variables";
 
 .users-container {
+	&.scroll {
+		overflow-y: scroll;
+		overflow-x: hidden;
+
+		&::-webkit-scrollbar {
+			width: 0.75rem;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: $color-grey-light;
+		}
+	}
+
 	&-header {
 		font-size: 2.1rem;
 		border-bottom: 1px solid black;
