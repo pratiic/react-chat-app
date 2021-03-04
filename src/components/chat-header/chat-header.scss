@@ -1,0 +1,31 @@
+@import "../../sass/variables";
+
+.chat-header {
+	display: none;
+	color: lightgrey;
+	font-size: 1.55rem;
+	font-family: $font-stack-primary;
+
+	.wrapper {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid black;
+	}
+
+	.username {
+		display: inline-block;
+		margin-right: 0.7rem;
+	}
+
+	.email {
+		color: $color-muted;
+		font-size: 1.4rem;
+	}
+
+	@media screen and (max-width: 800px) {
+		display: block;
+	}
+}

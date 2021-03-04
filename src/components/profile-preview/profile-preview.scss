@@ -5,6 +5,7 @@
 	justify-content: center;
 	align-items: center;
 	margin-right: 2.5rem;
+	position: relative;
 
 	.profile-picture {
 		margin-right: 0.75rem;
@@ -15,11 +16,17 @@
 	}
 
 	.icon {
-		path {
-			fill: lightgrey;
-		}
+		display: none;
 
-		margin-left: 1.5rem;
-		cursor: pointer;
+		@media screen and (max-width: 500px) {
+			display: inline-block;
+		}
+	}
+
+	.dropdown-menu {
+		position: absolute;
+		z-index: 5;
+		top: 100%;
+		right: 0;
 	}
 }

@@ -1,15 +1,32 @@
 @import "../../sass/variables";
 
 .user {
-	display: flex;
+	display: grid;
+	grid-template-columns: 4.3rem auto;
 	align-items: center;
 	border-bottom: 1px solid black;
-	padding: 1rem 2rem;
+	padding: 1rem 1.7rem;
 	color: lightgrey;
 	cursor: pointer;
+	background-color: $color-grey-dark;
 
-	.profile-picture {
-		margin-right: 1rem;
+	// .profile-picture {
+	// 	margin-right: 1.3rem;
+	// }
+
+	.user-info {
+		p {
+			text-align: left;
+		}
+
+		.username {
+			font-size: 1.7rem;
+		}
+
+		.email {
+			font-size: 1.3rem;
+			color: $color-muted;
+		}
 	}
 
 	&:hover {

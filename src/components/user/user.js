@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import "./user.scss";
 
 import { setChatUser } from "../../redux/chat-user/chat-user.actions";
+import { toggleUsersContainer } from "../../redux/users-container/users-container.actions";
 
 import {
 	getProfileLetter,
@@ -12,14 +13,21 @@ import {
 
 import ProfilePicture from "../profile-picture/profile-picture";
 
-const User = ({ user, setChatUser, currentUser, chatUser }) => {
-	const { username, active } = user;
+const User = ({
+	user,
+	setChatUser,
+	currentUser,
+	chatUser,
+	toggleUsersContainer,
+}) => {
+	const { username, email, active } = user;
 	const userClassName = active ? `user active` : `user`;
 
 	useEffect(() => {}, [chatUser]);
 
 	const handleUserClick = () => {
 		setChatUser(user);
+		toggleUsersContainer(false);
 	};
 
 	return (
@@ -28,7 +36,10 @@ const User = ({ user, setChatUser, currentUser, chatUser }) => {
 				userLetter={getProfileLetter(user)}
 				profilePicture={getProfilePicture(user)}
 			/>
-			<div className="username">{username}</div>
+			<div className="user-info">
+				<p className="username">{username}</p>
+				<p className="email">{email}</p>
+			</div>
 		</div>
 	);
 };
@@ -44,6 +55,9 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		setChatUser: (chatUser) => {
 			dispatch(setChatUser(chatUser));
+		},
+		toggleUsersContainer: (display) => {
+			dispatch(toggleUsersContainer(display));
 		},
 	};
 };

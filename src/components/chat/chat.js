@@ -8,6 +8,8 @@ import { setChatUser } from "../../redux/chat-user/chat-user.actions";
 
 import MessageField from "../message-field/message-field";
 import Message from "../message/message";
+import ChatWelcome from "../chat-welcome/chat-welcome";
+import ChatHeader from "../chat-header/chat-header";
 
 const Chat = ({ currentUser, chatUser, setChatUser }) => {
 	const [messages, setMessages] = useState([]);
@@ -177,13 +179,12 @@ const Chat = ({ currentUser, chatUser, setChatUser }) => {
 		<div className="chat">
 			{chatUser ? (
 				<React.Fragment>
+					<ChatHeader chatUser={chatUser} />
 					<div className="chat-main">{renderChat()}</div>
 					<MessageField />
 				</React.Fragment>
 			) : (
-				<p className="chat-title">
-					Click on one of the users to start chat
-				</p>
+				<ChatWelcome currentUser={currentUser} />
 			)}
 		</div>
 	);

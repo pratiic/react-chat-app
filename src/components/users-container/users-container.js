@@ -4,11 +4,19 @@ import { connect } from "react-redux";
 import "./users-container.scss";
 
 import { firestore } from "../../firebase/firebase.utils";
+import { toggleUsersContainer } from "../../redux/users-container/users-container.actions";
+
+import { ReactComponent as ArrowLeftIcon } from "../../assets/icons/arrow-left.svg";
 
 import User from "../user/user";
 import UserSearch from "../user-search/user-search";
 
-const UsersContainer = ({ currentUser, chatUser }) => {
+const UsersContainer = ({
+	currentUser,
+	chatUser,
+	displayInSmallScreens,
+	toggleUsersContainer,
+}) => {
 	const [users, setUsers] = useState([]);
 	const [numberOfUsers, setNumberOfUsers] = useState(0);
 	const [searchValue, setSearchValue] = useState("");
@@ -50,8 +58,8 @@ const UsersContainer = ({ currentUser, chatUser }) => {
 
 	return (
 		<div
-			className={`users-container ${
-				numberOfUsers > 11 ? "scroll" : null
+			className={`users-container scroll ${
+				displayInSmallScreens ? "display" : null
 			}`}
 		>
 			<div className="users-container-header">
@@ -59,6 +67,14 @@ const UsersContainer = ({ currentUser, chatUser }) => {
 					searchValue={searchValue}
 					searchValueChangeHandler={searchValueChangeHandler}
 				/>
+				{displayInSmallScreens ? (
+					<ArrowLeftIcon
+						className="icon icon-arrow-left small"
+						onClick={() => {
+							toggleUsersContainer(false);
+						}}
+					/>
+				) : null}
 			</div>
 			<div className="users-list">
 				{users
@@ -89,7 +105,16 @@ const mapStateToProps = (state) => {
 	return {
 		currentUser: state.currentUser.currentUser,
 		chatUser: state.chatUser.chatUser,
+		displayInSmallScreens: state.usersContainer.displayInSmallScreens,
 	};
 };
 
-export default connect(mapStateToProps)(UsersContainer);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		toggleUsersContainer: () => {
+			dispatch(toggleUsersContainer());
+		},
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsersContainer);

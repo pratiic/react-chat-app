@@ -1,26 +1,67 @@
 @import "../../sass/variables";
 
 .users-container {
+	transition: transform 150ms ease-in;
+
 	&-header {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		font-size: 2.1rem;
 		border-bottom: 1px solid black;
 		padding: 1.3rem;
 		color: $color-blue;
 		text-transform: capitalize;
+		background-color: $color-grey-dark;
+
+		.icon {
+			margin-left: 0.7rem;
+
+			&-arrow-left {
+				display: none;
+				@media screen and (max-width: 800px) {
+					display: block;
+				}
+			}
+		}
 	}
 
 	&.scroll {
-		.users-container {
-			overflow-y: scroll;
-			overflow-x: hidden;
+		// .users-list {
+		// 	overflow-y: scroll;
+		// 	overflow-x: hidden;
 
-			&::-webkit-scrollbar {
-				width: 0.75rem;
-			}
+		// 	&::-webkit-scrollbar {
+		// 		width: 0.75rem;
+		// 	}
 
-			&::-webkit-scrollbar-thumb {
-				background-color: $color-grey-light;
-			}
+		// 	&::-webkit-scrollbar-thumb {
+		// 		background-color: $color-grey-light;
+		// 	}
+		// }
+
+		overflow-y: scroll;
+		overflow-x: hidden;
+
+		&::-webkit-scrollbar {
+			width: 0.75rem;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: $color-grey-light;
+		}
+	}
+
+	@media screen and (max-width: 800px) {
+		position: absolute;
+		z-index: 7;
+		height: 100%;
+		border-right: 1px solid black;
+		background-color: $color-grey-dark;
+		transform: translateX(-100%);
+
+		&.display {
+			transform: translateX(0);
 		}
 	}
 }

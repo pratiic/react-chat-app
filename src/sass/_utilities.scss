@@ -2,6 +2,14 @@
 	max-width: 1400px;
 	margin: auto;
 	padding: 0 5rem;
+
+	@media screen and (max-width: 1000px) {
+		padding: 0 3.5rem;
+	}
+
+	@media screen and (max-width: 800px) {
+		padding: 0 1.5rem;
+	}
 }
 
 .capitalize {
@@ -15,6 +23,11 @@
 	&.small {
 		height: 1.5rem;
 		width: 1.5rem;
+	}
+
+	&.big {
+		height: 2rem;
+		width: 2rem;
 	}
 
 	cursor: pointer;
