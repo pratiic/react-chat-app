@@ -1,24 +1,26 @@
 @import "../../sass/variables";
 
 .users-container {
-	&.scroll {
-		overflow-y: scroll;
-		overflow-x: hidden;
-
-		&::-webkit-scrollbar {
-			width: 0.75rem;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			background-color: $color-grey-light;
-		}
-	}
-
 	&-header {
 		font-size: 2.1rem;
 		border-bottom: 1px solid black;
-		padding: 0.4rem 1.5rem;
+		padding: 1.3rem;
 		color: $color-blue;
 		text-transform: capitalize;
+	}
+
+	&.scroll {
+		.users-container {
+			overflow-y: scroll;
+			overflow-x: hidden;
+
+			&::-webkit-scrollbar {
+				width: 0.75rem;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: $color-grey-light;
+			}
+		}
 	}
 }

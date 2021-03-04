@@ -6,10 +6,12 @@ import "./users-container.scss";
 import { firestore } from "../../firebase/firebase.utils";
 
 import User from "../user/user";
+import UserSearch from "../user-search/user-search";
 
 const UsersContainer = ({ currentUser, chatUser }) => {
 	const [users, setUsers] = useState([]);
 	const [numberOfUsers, setNumberOfUsers] = useState(0);
+	const [searchValue, setSearchValue] = useState("");
 
 	useEffect(() => {
 		fetchUsers();
@@ -42,17 +44,43 @@ const UsersContainer = ({ currentUser, chatUser }) => {
 		});
 	};
 
+	const searchValueChangeHandler = (searchValue) => {
+		setSearchValue(searchValue);
+	};
+
 	return (
 		<div
 			className={`users-container ${
 				numberOfUsers > 11 ? "scroll" : null
 			}`}
 		>
-			{users
-				.filter((user) => user.userId !== currentUser.userId)
-				.map((user) => {
-					return <User user={user} key={user.userId} />;
-				})}
+			<div className="users-container-header">
+				<UserSearch
+					searchValue={searchValue}
+					searchValueChangeHandler={searchValueChangeHandler}
+				/>
+			</div>
+			<div className="users-list">
+				{users
+					.filter((user) => {
+						if (user.userId !== currentUser.userId) {
+							if (
+								user.username
+									.toLowerCase()
+									.includes(searchValue) ||
+								user.email.includes(searchValue)
+							) {
+								return true;
+							}
+							return null;
+						}
+
+						return null;
+					})
+					.map((user) => {
+						return <User user={user} key={user.userId} />;
+					})}
+			</div>
 		</div>
 	);
 };

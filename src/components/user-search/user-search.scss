@@ -1,0 +1,29 @@
+@import "../../sass/variables";
+
+.user-search {
+	position: relative;
+
+	&-input {
+		display: block;
+		background-color: $color-grey-light;
+		border: none;
+		outline: none;
+		padding: 0.5rem 3.5rem;
+		font-size: 1.5rem;
+		color: lightgrey;
+		border-radius: 5px;
+		width: 100%;
+		font-family: $font-stack-secondary;
+	}
+
+	.icon {
+		position: absolute;
+		top: 50%;
+		transform: translate(0, -50%);
+		margin-left: 1rem;
+
+		path {
+			fill: lightgrey;
+		}
+	}
+}

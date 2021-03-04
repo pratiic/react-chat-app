@@ -44,26 +44,6 @@
 		}
 	}
 
-	.icon {
-		cursor: pointer;
-
-		path {
-			fill: lightgrey;
-		}
-
-		&:hover {
-			path {
-				fill: $color-blue;
-			}
-		}
-
-		&:active {
-			path {
-				fill: lightgrey;
-			}
-		}
-	}
-
 	.emoji-picker-react {
 		height: 100%;
 		width: 100%;

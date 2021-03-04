@@ -11,4 +11,27 @@
 .icon {
 	height: 1.7rem;
 	width: 1.7rem;
+
+	&.small {
+		height: 1.5rem;
+		width: 1.5rem;
+	}
+
+	cursor: pointer;
+
+	path {
+		fill: lightgrey;
+	}
+
+	&:hover {
+		path {
+			fill: $color-blue;
+		}
+	}
+
+	&:active {
+		path {
+			fill: lightgrey;
+		}
+	}
 }
